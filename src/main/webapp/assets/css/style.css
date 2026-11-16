@@ -417,6 +417,17 @@ textarea.form-control {
     color: #ffffff;
 }
 
+.btn-block {
+    display: block;
+    width: 100%;
+}
+
+.alert-info {
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+}
+
 .form-actions-bar {
     display: flex;
     gap: 8px;

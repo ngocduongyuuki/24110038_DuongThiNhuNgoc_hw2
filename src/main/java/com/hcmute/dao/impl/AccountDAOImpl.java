@@ -40,12 +40,48 @@ public class AccountDAOImpl implements AccountDAO {
     }
 
     @Override
+    public Account findByUsernameOrEmail(String identifier) {
+        if (identifier == null || identifier.isBlank()) return null;
+        EntityManager em = JpaConfig.getEntityManager();
+        try {
+            TypedQuery<Account> query = em.createQuery(
+                "SELECT a FROM Account a WHERE a.username = :id OR a.email = :id", Account.class);
+            query.setParameter("id", identifier.trim());
+            query.setMaxResults(1);
+            List<Account> list = query.getResultList();
+            return list.isEmpty() ? null : list.get(0);
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
     public boolean insert(Account account) {
         EntityManager em = JpaConfig.getEntityManager();
         EntityTransaction trans = em.getTransaction();
         try {
             trans.begin();
             em.persist(account);
+            trans.commit();
+            return true;
+        } catch (Exception e) {
+            if (trans.isActive()) {
+                trans.rollback();
+            }
+            e.printStackTrace();
+            return false;
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public boolean update(Account account) {
+        EntityManager em = JpaConfig.getEntityManager();
+        EntityTransaction trans = em.getTransaction();
+        try {
+            trans.begin();
+            em.merge(account);
             trans.commit();
             return true;
         } catch (Exception e) {

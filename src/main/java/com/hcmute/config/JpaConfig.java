@@ -77,14 +77,24 @@ public class JpaConfig {
     private static Map<String, String> loadLocalEnvironment() {
         Map<String, String> map = new HashMap<>();
 
+        String catalinaBase = System.getProperty("catalina.base", "");
+        String catalinaHome = System.getProperty("catalina.home", "");
+        String userDir = System.getProperty("user.dir", "");
+
         // Danh sách các vị trí có thể chứa file .env hoặc db.properties
         String[] searchPaths = {
             ".env",
             "db.properties",
-            System.getProperty("user.dir") + File.separator + ".env",
-            System.getProperty("user.dir") + File.separator + "db.properties",
-            System.getProperty("catalina.base", "") + File.separator + ".env",
-            System.getProperty("catalina.home", "") + File.separator + ".env"
+            userDir + File.separator + ".env",
+            userDir + File.separator + "db.properties",
+            catalinaBase + File.separator + ".env",
+            catalinaBase + File.separator + "conf" + File.separator + ".env",
+            catalinaBase + File.separator + "conf" + File.separator + "db.properties",
+            catalinaHome + File.separator + ".env",
+            catalinaHome + File.separator + "conf" + File.separator + ".env",
+            // Tìm trong thư mục cha của user.dir (khi chạy từ bin/)
+            new File(userDir).getParent() != null
+                ? new File(userDir).getParent() + File.separator + ".env" : "",
         };
 
         for (String pathStr : searchPaths) {

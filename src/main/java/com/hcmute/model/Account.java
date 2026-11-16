@@ -34,6 +34,9 @@ public class Account implements Serializable {
     @Column(name = "password", nullable = false, length = 255)
     private String password;
 
+    @Column(name = "active", nullable = false)
+    private boolean active = false;
+
     public Account() {}
 
     public Account(int id, String fullName, String username, String email, String phone, String password) {
@@ -43,6 +46,17 @@ public class Account implements Serializable {
         this.email = email;
         this.phone = phone;
         this.password = password;
+        this.active = false;
+    }
+
+    public Account(int id, String fullName, String username, String email, String phone, String password, boolean active) {
+        this.id = id;
+        this.fullName = fullName;
+        this.username = username;
+        this.email = email;
+        this.phone = phone;
+        this.password = password;
+        this.active = active;
     }
 
     public Account(String fullName, String username, String email, String phone, String password) {
@@ -51,6 +65,16 @@ public class Account implements Serializable {
         this.email = email;
         this.phone = phone;
         this.password = password;
+        this.active = false;
+    }
+
+    public Account(String fullName, String username, String email, String phone, String password, boolean active) {
+        this.fullName = fullName;
+        this.username = username;
+        this.email = email;
+        this.phone = phone;
+        this.password = password;
+        this.active = active;
     }
 
     public int getId() { return id; }
@@ -70,4 +94,7 @@ public class Account implements Serializable {
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+
+    public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
 }
