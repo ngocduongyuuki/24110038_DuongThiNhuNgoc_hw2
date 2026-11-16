@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Circular blue background matching slide -->
+  <circle cx="50" cy="50" r="50" fill="#71b9f8" />
+  
+  <!-- Neck and collar -->
+  <rect x="42" y="60" width="16" height="14" fill="#f5cbb1" />
+  <path d="M 28 74 L 50 82 L 72 74 L 78 100 L 22 100 Z" fill="#ffffff" />
+  
+  <!-- Red necktie -->
+  <polygon points="46,80 54,80 55,95 50,100 45,95" fill="#d32f2f" />
+  <polygon points="47,78 53,78 52,83 48,83" fill="#b71c1c" />
+
+  <!-- Head / Face -->
+  <ellipse cx="50" cy="46" rx="19" ry="24" fill="#fcd7bd" />
+  <ellipse cx="30" cy="48" rx="3.5" ry="6" fill="#fcd7bd" />
+  <ellipse cx="70" cy="48" rx="3.5" ry="6" fill="#fcd7bd" />
+
+  <!-- Hair -->
+  <path d="M 30 42 C 30 25 40 20 50 20 C 60 20 70 25 70 42 C 67 30 60 25 50 26 C 40 25 33 30 30 42 Z" fill="#212121" />
+
+  <!-- Eyes & Eyebrows -->
+  <ellipse cx="43" cy="43" rx="2.5" ry="1.8" fill="#212121" />
+  <ellipse cx="57" cy="43" rx="2.5" ry="1.8" fill="#212121" />
+  <path d="M 39 39 Q 43 37 47 39" stroke="#212121" stroke-width="1.8" fill="none" stroke-linecap="round" />
+  <path d="M 53 39 Q 57 37 61 39" stroke="#212121" stroke-width="1.8" fill="none" stroke-linecap="round" />
+
+  <!-- Nose -->
+  <path d="M 50 43 L 49 50 L 52 50" stroke="#dfa384" stroke-width="1.5" fill="none" stroke-linecap="round" />
+
+  <!-- Mouth -->
+  <path d="M 45 56 Q 50 59 55 56" stroke="#c97161" stroke-width="1.8" fill="none" stroke-linecap="round" />
+</svg>
