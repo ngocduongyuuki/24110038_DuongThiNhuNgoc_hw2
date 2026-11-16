@@ -11,6 +11,7 @@
         <class>com.hcmute.model.Account</class>
         <class>com.hcmute.model.Product</class>
         <class>com.hcmute.model.Category</class>
+        <class>com.hcmute.model.OtpToken</class>
 
         <properties>
             <!-- Cấu hình chuẩn (Các giá trị này sẽ được JpaConfig ghi đè an toàn từ Biến môi trường hoặc .env) -->

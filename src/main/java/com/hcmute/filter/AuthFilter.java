@@ -25,6 +25,10 @@ public class AuthFilter implements Filter {
         boolean loggedIn = (session != null && session.getAttribute("account") != null);
 
         if (loggedIn) {
+            // Ngăn cache trang cần đăng nhập để Back button không hiển thị trang cũ
+            res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+            res.setHeader("Pragma", "no-cache");
+            res.setDateHeader("Expires", 0);
             chain.doFilter(request, response);
         } else {
             res.sendRedirect(req.getContextPath() + "/login");

@@ -11,6 +11,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
@@ -44,7 +46,8 @@ public class RegisterServlet extends HttpServlet {
             request.setAttribute("account", account);
             request.getRequestDispatcher("/WEB-INF/views/auth/register.jsp").forward(request, response);
         } else {
-            response.sendRedirect(request.getContextPath() + "/login?registered=1");
+            String emailEncoded = URLEncoder.encode(account.getEmail().trim(), StandardCharsets.UTF_8);
+            response.sendRedirect(request.getContextPath() + "/verify-otp?email=" + emailEncoded + "&purpose=REGISTER&sent=1");
         }
     }
 }
