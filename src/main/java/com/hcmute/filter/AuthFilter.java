@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-@WebFilter("/product/*")
+@WebFilter({"/product/*", "/home", "/video/*"})
 public class AuthFilter implements Filter {
 
     @Override

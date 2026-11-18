@@ -121,9 +121,7 @@ public class EmailConfig {
             catalinaBase + File.separator + "conf" + File.separator + ".env",
             catalinaHome + File.separator + ".env",
             new File(userDir).getParent() != null
-                ? new File(userDir).getParent() + File.separator + ".env" : "",
-            "D:\\Lập trình web\\24110038_DuongThiNhuNgoc_hw2\\.env",
-            "D:/Lập trình web/24110038_DuongThiNhuNgoc_hw2/.env"
+                ? new File(userDir).getParent() + File.separator + ".env" : ""
         };
 
         for (String pathStr : searchPaths) {

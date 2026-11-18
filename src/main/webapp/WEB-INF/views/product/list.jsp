@@ -12,7 +12,7 @@
 <body>
 
     <header class="top-header">
-        <a href="${pageContext.request.contextPath}/product/list" class="brand-title">Dashboard</a>
+        <a href="${pageContext.request.contextPath}/home" class="brand-title">Dashboard</a>
         <div class="user-actions">
             <span class="user-name">Xin chào <strong>${sessionScope.account.fullName != null ? sessionScope.account.fullName : 'Nguyễn Hữu Trung'}</strong></span>
             <a href="${pageContext.request.contextPath}/logout" class="btn-logout">Đăng xuất</a>
@@ -27,6 +27,16 @@
             </div>
 
             <ul class="sidebar-menu">
+                <li>
+                    <a href="${pageContext.request.contextPath}/home" class="menu-link">Trang chủ</a>
+                </li>
+                <li>
+                    <a href="${pageContext.request.contextPath}/video" class="menu-link">Quản lý Video</a>
+                    <ul class="tree-subnav">
+                        <li><a href="${pageContext.request.contextPath}/video/add">Thêm video mới</a></li>
+                        <li><a href="${pageContext.request.contextPath}/video">Danh sách video</a></li>
+                    </ul>
+                </li>
                 <li>
                     <a href="${pageContext.request.contextPath}/product/list" class="menu-link dashboard-tab">Dashboard</a>
                 </li>
@@ -94,7 +104,7 @@
                             <c:choose>
                                 <c:when test="${empty products}">
                                     <tr>
-                                        <td colspan="7" class="center" style="color: #888; padding: 20px;">Chưa có sản phẩm nào.</td>
+                                        <td colspan="7" class="center" style="color: var(--color-text-muted); padding: 20px;">Chưa có sản phẩm nào.</td>
                                     </tr>
                                 </c:when>
                                 <c:otherwise>
@@ -108,7 +118,7 @@
                                                              onerror="this.style.display='none';">
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <span style="color: #999; font-style: italic; font-size: 11px;">Không có ảnh</span>
+                                                        <span style="color: var(--color-text-muted); font-style: italic; font-size: 11px;">Không có ảnh</span>
                                                     </c:otherwise>
                                                 </c:choose>
                                             </td>

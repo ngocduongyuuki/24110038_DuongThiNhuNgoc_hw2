@@ -26,25 +26,26 @@
                 <div class="form-group">
                     <label>Họ và tên:</label>
                     <input type="text" class="form-control" name="fullName"
-                           placeholder="Nhập họ và tên" value="${account.fullName}" required>
+                           placeholder="Nhập họ và tên" value="${account.fullName}" required maxlength="100">
                 </div>
 
                 <div class="form-group">
                     <label>Tên đăng nhập:</label>
                     <input type="text" class="form-control" name="username"
-                           placeholder="Nhập tên đăng nhập" value="${account.username}" required>
+                           placeholder="Nhập tên đăng nhập (a-z, 0-9, không dấu)" value="${account.username}"
+                           required maxlength="50" pattern="[a-zA-Z0-9._-]+">
                 </div>
 
                 <div class="form-group">
                     <label>Email:</label>
                     <input type="email" class="form-control" name="email"
-                           placeholder="name@example.com" value="${account.email}" required>
+                           placeholder="name@example.com" value="${account.email}" required maxlength="100">
                 </div>
 
                 <div class="form-group">
                     <label>Số điện thoại:</label>
                     <input type="tel" class="form-control" name="phone"
-                           placeholder="Nhập số điện thoại" value="${account.phone}">
+                           placeholder="Nhập số điện thoại (tối đa 15 chữ số)" value="${account.phone}" maxlength="15">
                 </div>
 
                 <div class="form-group">
@@ -56,7 +57,7 @@
                 <div class="form-group">
                     <label>Xác nhận mật khẩu:</label>
                     <input type="password" class="form-control" name="confirmPassword"
-                           placeholder="Nhập lại mật khẩu" required>
+                           placeholder="Nhập lại mật khẩu" required minlength="6">
                 </div>
 
                 <div style="margin-top: 20px;">

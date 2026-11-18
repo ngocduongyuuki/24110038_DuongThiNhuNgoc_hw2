@@ -93,8 +93,8 @@
                         </div>
 
                         <div class="form-actions-bar">
-                            <button type="submit" class="btn btn-default">Edit</button>
-                            <button type="reset" class="btn btn-primary">Reset</button>
+                            <button type="submit" class="btn btn-primary">Edit</button>
+                            <button type="reset" class="btn btn-default">Reset</button>
                             <a href="${pageContext.request.contextPath}/product/list" class="btn btn-default">Quay lại</a>
                         </div>
                     </form>

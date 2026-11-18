@@ -22,8 +22,8 @@
                 <div class="alert alert-danger">${error}</div>
             </c:if>
 
-            <p style="font-size: 13px; color: #555555; margin-bottom: 15px;">
-                Tài khoản: <strong style="color: #0080ff;">${email}</strong><br>
+            <p style="font-size: 13px; color: var(--color-text-muted); margin-bottom: 15px;">
+                Tài khoản: <strong style="color: var(--color-primary);">${email}</strong><br>
                 Vui lòng nhập mật khẩu mới của bạn (ít nhất 6 ký tự).
             </p>
 

@@ -22,7 +22,7 @@
                 <div class="alert alert-danger">${error}</div>
             </c:if>
 
-            <p style="font-size: 13px; color: #555555; margin-bottom: 15px;">
+            <p style="font-size: 13px; color: var(--color-text-muted); margin-bottom: 15px;">
                 Vui lòng nhập địa chỉ email đã đăng ký. Hệ thống sẽ gửi một mã OTP gồm 6 chữ số để bạn đặt lại mật khẩu.
             </p>
 

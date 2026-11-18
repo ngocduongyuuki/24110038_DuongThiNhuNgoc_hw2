@@ -12,6 +12,7 @@
         <class>com.hcmute.model.Product</class>
         <class>com.hcmute.model.Category</class>
         <class>com.hcmute.model.OtpToken</class>
+        <class>com.hcmute.model.Video</class>
 
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
