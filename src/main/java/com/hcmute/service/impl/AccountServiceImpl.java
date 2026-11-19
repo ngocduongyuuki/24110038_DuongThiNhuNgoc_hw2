@@ -199,4 +199,58 @@ public class AccountServiceImpl implements AccountService {
         account.setPassword(SecurityUtil.hashPassword(newPassword));
         return accountDAO.update(account);
     }
+
+    @Override
+    public Account findById(int id) {
+        return accountDAO.findById(id);
+    }
+
+    @Override
+    public String updateProfile(int accountId, String fullName, String phone) {
+        if (fullName == null || fullName.isBlank()) {
+            return "Họ và tên không được để trống.";
+        }
+        fullName = fullName.trim();
+        if (fullName.length() > 100) {
+            return "Họ và tên không được vượt quá 100 ký tự.";
+        }
+
+        if (phone != null && !phone.isBlank()) {
+            phone = phone.trim().replaceAll("\\s+", "");
+            if (phone.length() > 15) {
+                return "Số điện thoại không được vượt quá 15 ký tự.";
+            }
+            if (!PHONE_PATTERN.matcher(phone).matches()) {
+                return "Số điện thoại không đúng định dạng (chỉ chứa chữ số và dấu +, từ 8 đến 15 ký tự).";
+            }
+        } else {
+            phone = null;
+        }
+
+        Account account = accountDAO.findById(accountId);
+        if (account == null) return "Tài khoản không tồn tại.";
+
+        account.setFullName(fullName);
+        account.setPhone(phone);
+        boolean ok = accountDAO.update(account);
+        return ok ? null : "Cập nhật thất bại, vui lòng thử lại.";
+    }
+
+    @Override
+    public boolean updateEmail(int accountId, String newEmail) {
+        if (newEmail == null || newEmail.isBlank()) return false;
+        Account account = accountDAO.findById(accountId);
+        if (account == null) return false;
+        account.setEmail(newEmail.trim().toLowerCase());
+        return accountDAO.update(account);
+    }
+
+    @Override
+    public boolean updateProfileImage(int accountId, String imageUrl) {
+        if (imageUrl == null || imageUrl.isBlank()) return false;
+        Account account = accountDAO.findById(accountId);
+        if (account == null) return false;
+        account.setProfileImage(imageUrl.trim());
+        return accountDAO.update(account);
+    }
 }

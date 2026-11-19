@@ -17,6 +17,19 @@ public class AccountDAOImpl implements AccountDAO {
     private static final Logger LOGGER = Logger.getLogger(AccountDAOImpl.class.getName());
 
     @Override
+    public Account findById(int id) {
+        EntityManager em = JpaConfig.getEntityManager();
+        try {
+            return em.find(Account.class, id);
+        } catch (Exception e) {
+            logSqlException("findById Account [id=" + id + "]", e);
+            return null;
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
     public Account findByUsername(String username) {
         if (username == null || username.isBlank()) return null;
         EntityManager em = JpaConfig.getEntityManager();

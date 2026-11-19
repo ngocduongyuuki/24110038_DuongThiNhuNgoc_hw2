@@ -112,6 +112,13 @@ public class VideoServlet extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/views/video/add.jsp").forward(request, response);
             return;
         }
+        if (title.length() > 200) {
+            request.setAttribute("error", "Tiêu đề video không được vượt quá 200 ký tự.");
+            request.setAttribute("title", title);
+            request.setAttribute("description", description);
+            request.getRequestDispatcher("/WEB-INF/views/video/add.jsp").forward(request, response);
+            return;
+        }
 
         // Handle file upload
         Part videoPart = request.getPart("videoFile");
@@ -188,6 +195,12 @@ public class VideoServlet extends HttpServlet {
 
         if (title == null || title.isBlank()) {
             request.setAttribute("error", "Tiêu đề không được để trống.");
+            request.setAttribute("video", video);
+            request.getRequestDispatcher("/WEB-INF/views/video/edit.jsp").forward(request, response);
+            return;
+        }
+        if (title.length() > 200) {
+            request.setAttribute("error", "Tiêu đề video không được vượt quá 200 ký tự.");
             request.setAttribute("video", video);
             request.getRequestDispatcher("/WEB-INF/views/video/edit.jsp").forward(request, response);
             return;

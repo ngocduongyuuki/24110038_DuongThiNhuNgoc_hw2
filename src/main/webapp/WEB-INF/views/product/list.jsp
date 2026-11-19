@@ -4,178 +4,124 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Quản lý sản phẩm</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
+    <title>Danh sách sản phẩm - ProductManager</title>
 </head>
 <body>
-
-    <header class="top-header">
-        <a href="${pageContext.request.contextPath}/home" class="brand-title">Dashboard</a>
-        <div class="user-actions">
-            <span class="user-name">Xin chào <strong>${sessionScope.account.fullName != null ? sessionScope.account.fullName : 'Nguyễn Hữu Trung'}</strong></span>
-            <a href="${pageContext.request.contextPath}/logout" class="btn-logout">Đăng xuất</a>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h1 class="h4 mb-1"><i class="bi bi-box me-2 text-danger"></i>Quản lý sản phẩm</h1>
+            <p class="text-muted mb-0" style="font-size:13px;">Danh sách tất cả sản phẩm trong hệ thống</p>
         </div>
-    </header>
-
-    <div class="app-layout">
-        <aside class="sidebar">
-            <div class="sidebar-profile">
-                <img class="sidebar-avatar" src="${pageContext.request.contextPath}/assets/images/avatar.svg" alt="Admin">
-                <div class="sidebar-role">Bạn là Admin</div>
-            </div>
-
-            <ul class="sidebar-menu">
-                <li>
-                    <a href="${pageContext.request.contextPath}/home" class="menu-link">Trang chủ</a>
-                </li>
-                <li>
-                    <a href="${pageContext.request.contextPath}/video" class="menu-link">Quản lý Video</a>
-                    <ul class="tree-subnav">
-                        <li><a href="${pageContext.request.contextPath}/video/add">Thêm video mới</a></li>
-                        <li><a href="${pageContext.request.contextPath}/video">Danh sách video</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="${pageContext.request.contextPath}/product/list" class="menu-link dashboard-tab">Dashboard</a>
-                </li>
-                <li>
-                    <a href="${pageContext.request.contextPath}/product/list" class="menu-link active-black">Quản lý Danh mục</a>
-                    <ul class="tree-subnav">
-                        <li><a href="${pageContext.request.contextPath}/product/add">Thêm danh mục mới</a></li>
-                        <li><a href="${pageContext.request.contextPath}/product/list" class="sub-active">Danh sách danh mục</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="${pageContext.request.contextPath}/product/list" class="menu-link">Quản lý sản phẩm</a>
-                </li>
-                <li>
-                    <a href="#" class="menu-link">Quản lý tài khoản</a>
-                </li>
-            </ul>
-        </aside>
-
-        <main class="content-area">
-            <h1 class="page-header-title">Quản lý sản phẩm</h1>
-            <p class="page-header-subtitle">Nơi bạn có thể quản lý sản phẩm của mình</p>
-
-            <c:if test="${not empty param.added}">
-                <div class="alert alert-success">Thêm sản phẩm thành công!</div>
-            </c:if>
-            <c:if test="${not empty param.updated}">
-                <div class="alert alert-success">Cập nhật sản phẩm thành công!</div>
-            </c:if>
-            <c:if test="${not empty param.deleted}">
-                <div class="alert alert-success">Xóa sản phẩm thành công!</div>
-            </c:if>
-
-            <div class="panel-box">
-                <div class="panel-box-header">Danh sách sản phẩm</div>
-                <div class="panel-box-body">
-                    <div class="table-filter-bar">
-                        <div>
-                            <label>
-                                <select id="recordsPerPage" onchange="changePageSize()">
-                                    <option value="10">10</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                </select> records per page
-                            </label>
-                        </div>
-                        <div>
-                            <label>Search:<input type="search" id="searchInput" onkeyup="filterTable()"></label>
-                        </div>
-                    </div>
-
-                    <table class="slide-table" id="productTable">
-                        <thead>
-                            <tr>
-                                <th style="width: 50px;" class="center">STT</th>
-                                <th style="width: 140px;" class="center">Hình ảnh</th>
-                                <th>Tên sản phẩm</th>
-                                <th>Mô tả</th>
-                                <th style="width: 120px;">Giá (VNĐ)</th>
-                                <th style="width: 80px;" class="center">Số lượng</th>
-                                <th style="width: 110px;">Hành động</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:choose>
-                                <c:when test="${empty products}">
-                                    <tr>
-                                        <td colspan="7" class="center" style="color: var(--color-text-muted); padding: 20px;">Chưa có sản phẩm nào.</td>
-                                    </tr>
-                                </c:when>
-                                <c:otherwise>
-                                    <c:forEach var="p" items="${products}" varStatus="st">
-                                        <tr>
-                                            <td class="center">${st.index + 1}</td>
-                                            <td class="center">
-                                                <c:choose>
-                                                    <c:when test="${not empty p.image}">
-                                                        <img class="table-thumb-img" src="${p.image}" alt="${p.productName}"
-                                                             onerror="this.style.display='none';">
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <span style="color: var(--color-text-muted); font-style: italic; font-size: 11px;">Không có ảnh</span>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </td>
-                                            <td>${p.productName}</td>
-                                            <td>${p.description}</td>
-                                            <td><fmt:formatNumber value="${p.price}" pattern="#,##0" /></td>
-                                            <td class="center">${p.quantity}</td>
-                                            <td class="action-links">
-                                                <a href="<c:url value='/product/edit?id=${p.productId}'/>">Sửa</a>
-                                                | <a href="<c:url value='/product/delete?id=${p.productId}'/>"
-                                                     onclick="return confirm('Bạn có chắc muốn xóa sản phẩm \'${p.productName}\'?');">Xóa</a>
-                                            </td>
-                                        </tr>
-                                    </c:forEach>
-                                </c:otherwise>
-                            </c:choose>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </main>
+        <a href="${pageContext.request.contextPath}/product/add" class="btn btn-danger">
+            <i class="bi bi-plus-circle me-1"></i>Thêm sản phẩm
+        </a>
     </div>
 
-    <script>
-    function filterTable() {
-        var input = document.getElementById("searchInput");
-        var filter = input.value.toLowerCase().trim();
-        var table = document.getElementById("productTable");
-        var tbody = table.getElementsByTagName("tbody")[0];
-        var tr = tbody.getElementsByTagName("tr");
+    <c:if test="${not empty param.added}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>Thêm sản phẩm thành công!
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </c:if>
+    <c:if test="${not empty param.updated}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>Cập nhật sản phẩm thành công!
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </c:if>
+    <c:if test="${not empty param.deleted}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>Xóa sản phẩm thành công!
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </c:if>
 
-        for (var i = 0; i < tr.length; i++) {
-            if (tr[i].cells.length <= 1) continue;
-            var text = tr[i].textContent || tr[i].innerText;
-            if (text.toLowerCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
-            } else {
-                tr[i].style.display = "none";
-            }
-        }
-    }
+    <div class="card shadow-sm">
+        <div class="card-header bg-white py-2 d-flex justify-content-between align-items-center">
+            <strong><i class="bi bi-table me-2"></i>Danh sách sản phẩm</strong>
+            <div class="d-flex gap-2 align-items-center">
+                <div class="input-group input-group-sm" style="width:220px;">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="search" class="form-control" id="searchInput" placeholder="Tìm kiếm..." oninput="filterTable()">
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered mb-0 align-middle" id="productTable">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="text-center" style="width:50px;">STT</th>
+                            <th class="text-center" style="width:120px;">Hình ảnh</th>
+                            <th>Tên sản phẩm</th>
+                            <th>Mô tả</th>
+                            <th style="width:130px;">Giá (VNĐ)</th>
+                            <th class="text-center" style="width:90px;">Số lượng</th>
+                            <th class="text-center" style="width:120px;">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:choose>
+                            <c:when test="${empty products}">
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted py-4">
+                                        <i class="bi bi-inbox me-2"></i>Chưa có sản phẩm nào.
+                                    </td>
+                                </tr>
+                            </c:when>
+                            <c:otherwise>
+                                <c:forEach var="p" items="${products}" varStatus="st">
+                                    <tr>
+                                        <td class="text-center">${st.index + 1}</td>
+                                        <td class="text-center">
+                                            <c:choose>
+                                                <c:when test="${not empty p.image}">
+                                                    <img src="${p.image}" alt="${p.productName}"
+                                                         style="max-width:80px;max-height:60px;object-fit:contain;border-radius:4px;"
+                                                         onerror="this.style.display='none';">
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span class="text-muted" style="font-size:11px;font-style:italic;">Không có ảnh</span>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
+                                        <td><strong><c:out value="${p.productName}"/></strong></td>
+                                        <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                                            <c:out value="${p.description}"/>
+                                        </td>
+                                        <td><fmt:formatNumber value="${p.price}" pattern="#,##0"/> đ</td>
+                                        <td class="text-center">${p.quantity}</td>
+                                        <td class="text-center">
+                                            <a href="${pageContext.request.contextPath}/product/edit?id=${p.productId}"
+                                               class="btn btn-sm btn-outline-primary me-1" title="Sửa">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a href="${pageContext.request.contextPath}/product/delete?id=${p.productId}"
+                                               class="btn btn-sm btn-outline-danger"
+                                               title="Xóa"
+                                               onclick="return confirm('Bạn có chắc muốn xóa sản phẩm \'${p.productName}\'?');">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </c:otherwise>
+                        </c:choose>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-    function changePageSize() {
-        var size = parseInt(document.getElementById("recordsPerPage").value, 10);
-        var table = document.getElementById("productTable");
-        var tbody = table.getElementsByTagName("tbody")[0];
-        var tr = tbody.getElementsByTagName("tr");
-
-        for (var i = 0; i < tr.length; i++) {
-            if (tr[i].cells.length <= 1) continue;
-            if (i < size) {
-                tr[i].style.display = "";
-            } else {
-                tr[i].style.display = "none";
-            }
-        }
-    }
-    </script>
+<script>
+function filterTable() {
+    var filter = document.getElementById("searchInput").value.toLowerCase().trim();
+    var rows = document.querySelectorAll("#productTable tbody tr");
+    rows.forEach(function(row) {
+        if (row.cells.length <= 1) return;
+        row.style.display = row.textContent.toLowerCase().indexOf(filter) > -1 ? "" : "none";
+    });
+}
+</script>
 </body>
 </html>

@@ -89,8 +89,8 @@ public class ProductServlet extends HttpServlet {
 
     private void handleAdd(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String error = validateInputs(request);
         Product product = buildProductFromRequest(request);
-        String error = validate(product);
 
         if (error != null) {
             request.setAttribute("error", error);
@@ -111,6 +111,7 @@ public class ProductServlet extends HttpServlet {
 
     private void handleEdit(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String error = validateInputs(request);
         Product product = buildProductFromRequest(request);
         try {
             product.setProductId(Integer.parseInt(request.getParameter("productId")));
@@ -119,7 +120,6 @@ public class ProductServlet extends HttpServlet {
             return;
         }
 
-        String error = validate(product);
         if (error != null) {
             request.setAttribute("error", error);
             request.setAttribute("product", product);
@@ -139,37 +139,68 @@ public class ProductServlet extends HttpServlet {
 
     private Product buildProductFromRequest(HttpServletRequest request) {
         Product product = new Product();
-        product.setProductName(request.getParameter("productName"));
+        String name = request.getParameter("productName");
+        product.setProductName(name != null ? name.trim() : null);
         product.setDescription(request.getParameter("description"));
         product.setImage(request.getParameter("image"));
 
         String priceStr = request.getParameter("price");
         String quantityStr = request.getParameter("quantity");
 
-        try {
-            product.setPrice(new BigDecimal(priceStr));
-        } catch (Exception e) {
-            product.setPrice(BigDecimal.ZERO);
+        if (priceStr != null && !priceStr.isBlank()) {
+            try {
+                product.setPrice(new BigDecimal(priceStr.trim()));
+            } catch (Exception ignored) {}
         }
-        try {
-            product.setQuantity(Integer.parseInt(quantityStr));
-        } catch (Exception e) {
-            product.setQuantity(0);
+        if (quantityStr != null && !quantityStr.isBlank()) {
+            try {
+                product.setQuantity(Integer.parseInt(quantityStr.trim()));
+            } catch (Exception ignored) {}
         }
 
         return product;
     }
 
-    private String validate(Product product) {
-        if (product.getProductName() == null || product.getProductName().isBlank()) {
+    private String validateInputs(HttpServletRequest request) {
+        String name = request.getParameter("productName");
+        if (name == null || name.isBlank()) {
             return "Tên sản phẩm không được để trống.";
         }
-        if (product.getPrice() == null || product.getPrice().compareTo(BigDecimal.ZERO) < 0) {
-            return "Giá sản phẩm không hợp lệ.";
+        if (name.trim().length() > 200) {
+            return "Tên sản phẩm không được vượt quá 200 ký tự.";
         }
-        if (product.getQuantity() < 0) {
-            return "Số lượng không hợp lệ.";
+
+        String priceStr = request.getParameter("price");
+        if (priceStr == null || priceStr.isBlank()) {
+            return "Giá sản phẩm không được để trống.";
         }
+        try {
+            BigDecimal price = new BigDecimal(priceStr.trim());
+            if (price.compareTo(BigDecimal.ZERO) < 0) {
+                return "Giá sản phẩm phải lớn hơn hoặc bằng 0.";
+            }
+        } catch (Exception e) {
+            return "Giá sản phẩm phải là một số hợp lệ.";
+        }
+
+        String quantityStr = request.getParameter("quantity");
+        if (quantityStr == null || quantityStr.isBlank()) {
+            return "Số lượng sản phẩm không được để trống.";
+        }
+        try {
+            int qty = Integer.parseInt(quantityStr.trim());
+            if (qty < 0) {
+                return "Số lượng sản phẩm phải lớn hơn hoặc bằng 0.";
+            }
+        } catch (Exception e) {
+            return "Số lượng sản phẩm phải là một số nguyên hợp lệ.";
+        }
+
+        String image = request.getParameter("image");
+        if (image != null && image.trim().length() > 500) {
+            return "Đường dẫn ảnh không được vượt quá 500 ký tự.";
+        }
+
         return null;
     }
 }

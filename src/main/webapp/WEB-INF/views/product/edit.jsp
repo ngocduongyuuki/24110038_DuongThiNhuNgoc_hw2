@@ -3,105 +3,131 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chỉnh sửa sản phẩm</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
+    <title>Chỉnh sửa sản phẩm - ProductManager</title>
 </head>
 <body>
-
-    <header class="top-header">
-        <a href="${pageContext.request.contextPath}/product/list" class="brand-title">Dashboard</a>
-        <div class="user-actions">
-            <span class="user-name">Xin chào <strong>${sessionScope.account.fullName != null ? sessionScope.account.fullName : 'Nguyễn Hữu Trung'}</strong></span>
-            <a href="${pageContext.request.contextPath}/logout" class="btn-logout">Đăng xuất</a>
+    <div class="d-flex align-items-center mb-3">
+        <a href="${pageContext.request.contextPath}/product/list" class="btn btn-sm btn-outline-secondary me-2">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        <div>
+            <h1 class="h4 mb-0"><i class="bi bi-pencil-square me-2 text-danger"></i>Chỉnh sửa sản phẩm</h1>
         </div>
-    </header>
-
-    <div class="app-layout">
-        <aside class="sidebar">
-            <div class="sidebar-profile">
-                <img class="sidebar-avatar" src="${pageContext.request.contextPath}/assets/images/avatar.svg" alt="Admin">
-                <div class="sidebar-role">Bạn là Admin</div>
-            </div>
-
-            <ul class="sidebar-menu">
-                <li>
-                    <a href="${pageContext.request.contextPath}/product/list" class="menu-link dashboard-tab">Dashboard</a>
-                </li>
-                <li>
-                    <a href="${pageContext.request.contextPath}/product/list" class="menu-link active-black">Quản lý Danh mục</a>
-                    <ul class="tree-subnav">
-                        <li><a href="${pageContext.request.contextPath}/product/add">Thêm danh mục mới</a></li>
-                        <li><a href="${pageContext.request.contextPath}/product/list">Danh sách danh mục</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="${pageContext.request.contextPath}/product/list" class="menu-link">Quản lý sản phẩm</a>
-                </li>
-                <li>
-                    <a href="#" class="menu-link">Quản lý tài khoản</a>
-                </li>
-            </ul>
-        </aside>
-
-        <main class="content-area">
-            <c:if test="${not empty error}">
-                <div class="alert alert-danger">${error}</div>
-            </c:if>
-
-            <div class="panel-box">
-                <div class="panel-box-header">Chỉnh sửa sản phẩm</div>
-                <div class="panel-box-body">
-                    <h2 class="form-heading">Sản phẩm:</h2>
-
-                    <form role="form" action="${pageContext.request.contextPath}/product/edit" method="post">
-                        <input type="hidden" name="productId" value="${product.productId}">
-
-                        <div class="form-group">
-                            <label>Tên sản phẩm:</label>
-                            <input type="text" class="form-control" name="productName"
-                                   value="${product.productName}" required />
-                        </div>
-
-                        <div class="form-group">
-                            <label>Mô tả:</label>
-                            <textarea class="form-control" name="description" rows="3">${product.description}</textarea>
-                        </div>
-
-                        <div style="display: flex; gap: 15px; max-width: 650px;">
-                            <div class="form-group" style="flex: 1;">
-                                <label>Giá (VNĐ):</label>
-                                <input type="number" class="form-control" name="price"
-                                       value="${product.price}" min="0" step="1000" required />
-                            </div>
-                            <div class="form-group" style="flex: 1;">
-                                <label>Số lượng:</label>
-                                <input type="number" class="form-control" name="quantity"
-                                       value="${product.quantity}" min="0" required />
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <c:if test="${not empty product.image}">
-                                <img class="preview-img" src="${product.image}" alt="${product.productName}"
-                                     onerror="this.style.display='none';">
-                            </c:if>
-                            <label>Ảnh đại diện</label>
-                            <input type="text" class="form-control" name="image"
-                                   value="${product.image}" placeholder="Nhập URL ảnh hoặc tên file ảnh" />
-                        </div>
-
-                        <div class="form-actions-bar">
-                            <button type="submit" class="btn btn-primary">Edit</button>
-                            <button type="reset" class="btn btn-default">Reset</button>
-                            <a href="${pageContext.request.contextPath}/product/list" class="btn btn-default">Quay lại</a>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </main>
     </div>
 
+    <div class="card shadow-sm" style="max-width:700px;">
+        <div class="card-header bg-white">
+            <strong><i class="bi bi-box me-2"></i>Thông tin sản phẩm</strong>
+        </div>
+        <div class="card-body">
+            <c:if test="${not empty error}">
+                <div class="alert alert-danger" role="alert">
+                    <i class="bi bi-exclamation-triangle me-2"></i><c:out value="${error}"/>
+                </div>
+            </c:if>
+
+            <form method="post" action="${pageContext.request.contextPath}/product/edit" novalidate id="editProductForm">
+                <input type="hidden" name="productId" value="${product.productId}">
+
+                <div class="mb-3">
+                    <label for="productName" class="form-label fw-semibold">
+                        Tên sản phẩm <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" class="form-control" id="productName" name="productName"
+                           value="<c:out value='${product.productName}'/>"
+                           required maxlength="200">
+                    <div class="invalid-feedback">Tên sản phẩm không được để trống.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="description" class="form-label fw-semibold">Mô tả</label>
+                    <textarea class="form-control" id="description" name="description" rows="3"><c:out value="${product.description}"/></textarea>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="price" class="form-label fw-semibold">
+                            Giá (VNĐ) <span class="text-danger">*</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="price" name="price"
+                                   value="${product.price}" min="0" step="1000" required>
+                            <span class="input-group-text">đ</span>
+                            <div class="invalid-feedback">Giá sản phẩm phải >= 0.</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="quantity" class="form-label fw-semibold">
+                            Số lượng <span class="text-danger">*</span>
+                        </label>
+                        <input type="number" class="form-control" id="quantity" name="quantity"
+                               value="${product.quantity}" min="0" required>
+                        <div class="invalid-feedback">Số lượng phải >= 0.</div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="image" class="form-label fw-semibold">Ảnh đại diện</label>
+                    <c:if test="${not empty product.image}">
+                        <div class="mb-2">
+                            <img src="${product.image}" alt="${product.productName}"
+                                 style="max-width:120px;max-height:90px;object-fit:contain;border:1px solid #dee2e6;border-radius:4px;padding:4px;"
+                                 onerror="this.style.display='none';">
+                        </div>
+                    </c:if>
+                    <input type="text" class="form-control" id="image" name="image"
+                           value="<c:out value='${product.image}'/>"
+                           placeholder="Nhập URL ảnh hoặc để trống"
+                           maxlength="500">
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-check-circle me-1"></i>Lưu thay đổi
+                    </button>
+                    <button type="reset" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-counterclockwise me-1"></i>Khôi phục
+                    </button>
+                    <a href="${pageContext.request.contextPath}/product/list" class="btn btn-outline-dark">
+                        <i class="bi bi-x-lg me-1"></i>Hủy
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<script>
+(function() {
+    'use strict';
+    var form = document.getElementById('editProductForm');
+    if (!form) return;
+    form.addEventListener('submit', function(e) {
+        var valid = true;
+        form.querySelectorAll('.is-invalid').forEach(function(el){ el.classList.remove('is-invalid'); });
+
+        var name = document.getElementById('productName').value.trim();
+        if (!name || name.length > 200) {
+            document.getElementById('productName').classList.add('is-invalid');
+            valid = false;
+        }
+
+        var priceVal = document.getElementById('price').value;
+        var price = parseFloat(priceVal);
+        if (priceVal === '' || isNaN(price) || price < 0) {
+            document.getElementById('price').classList.add('is-invalid');
+            valid = false;
+        }
+
+        var qtyVal = document.getElementById('quantity').value;
+        var qty = parseInt(qtyVal, 10);
+        if (qtyVal === '' || isNaN(qty) || qty < 0) {
+            document.getElementById('quantity').classList.add('is-invalid');
+            valid = false;
+        }
+
+        if (!valid) { e.preventDefault(); e.stopPropagation(); }
+    });
+})();
+</script>
 </body>
 </html>

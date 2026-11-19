@@ -37,6 +37,9 @@ public class Account implements Serializable {
     @Column(name = "active", nullable = false)
     private boolean active = false;
 
+    @Column(name = "profile_image", length = 500)
+    private String profileImage;
+
     public Account() {}
 
     public Account(int id, String fullName, String username, String email, String phone, String password) {
@@ -97,4 +100,7 @@ public class Account implements Serializable {
 
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
+
+    public String getProfileImage() { return profileImage; }
+    public void setProfileImage(String profileImage) { this.profileImage = profileImage; }
 }
