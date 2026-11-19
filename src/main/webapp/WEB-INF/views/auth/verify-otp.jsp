@@ -35,9 +35,9 @@
                 <div class="alert alert-danger">${error}</div>
             </c:if>
 
-            <p style="font-size: 13px; color: #555555; margin-bottom: 15px; text-align: center;">
+            <p style="font-size: 13px; color: var(--color-text-muted); margin-bottom: 15px; text-align: center;">
                 Mã xác thực gồm 6 chữ số đã được gửi tới email:<br>
-                <strong style="color: #0080ff; font-size: 14px;">${not empty maskedEmail ? maskedEmail : email}</strong>
+                <strong style="color: var(--color-primary); font-size: 14px;">${not empty maskedEmail ? maskedEmail : email}</strong>
             </p>
 
             <form method="post" action="${pageContext.request.contextPath}/verify-otp">
@@ -58,7 +58,7 @@
                            style="text-align: center; font-size: 24px; letter-spacing: 10px; font-weight: bold; height: 45px; max-width: 100%;"
                            required
                            autofocus>
-                    <small style="display: block; text-align: center; color: #888888; margin-top: 5px;">
+                    <small style="display: block; text-align: center; color: var(--color-text-muted); margin-top: 5px;">
                         Mã OTP có hiệu lực trong vòng 5 phút
                     </small>
                 </div>

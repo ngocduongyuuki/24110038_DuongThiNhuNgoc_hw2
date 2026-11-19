@@ -7,19 +7,28 @@ import com.hcmute.model.Account;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class AccountDAOImpl implements AccountDAO {
 
+    private static final Logger LOGGER = Logger.getLogger(AccountDAOImpl.class.getName());
+
     @Override
     public Account findByUsername(String username) {
+        if (username == null || username.isBlank()) return null;
         EntityManager em = JpaConfig.getEntityManager();
         try {
             TypedQuery<Account> query = em.createQuery(
                 "SELECT a FROM Account a WHERE a.username = :username", Account.class);
-            query.setParameter("username", username);
+            query.setParameter("username", username.trim());
             List<Account> list = query.getResultList();
             return list.isEmpty() ? null : list.get(0);
+        } catch (Exception e) {
+            logSqlException("findByUsername", e);
+            return null;
         } finally {
             em.close();
         }
@@ -27,13 +36,17 @@ public class AccountDAOImpl implements AccountDAO {
 
     @Override
     public Account findByEmail(String email) {
+        if (email == null || email.isBlank()) return null;
         EntityManager em = JpaConfig.getEntityManager();
         try {
             TypedQuery<Account> query = em.createQuery(
                 "SELECT a FROM Account a WHERE a.email = :email", Account.class);
-            query.setParameter("email", email);
+            query.setParameter("email", email.trim());
             List<Account> list = query.getResultList();
             return list.isEmpty() ? null : list.get(0);
+        } catch (Exception e) {
+            logSqlException("findByEmail", e);
+            return null;
         } finally {
             em.close();
         }
@@ -50,6 +63,9 @@ public class AccountDAOImpl implements AccountDAO {
             query.setMaxResults(1);
             List<Account> list = query.getResultList();
             return list.isEmpty() ? null : list.get(0);
+        } catch (Exception e) {
+            logSqlException("findByUsernameOrEmail", e);
+            return null;
         } finally {
             em.close();
         }
@@ -68,7 +84,7 @@ public class AccountDAOImpl implements AccountDAO {
             if (trans.isActive()) {
                 trans.rollback();
             }
-            e.printStackTrace();
+            logSqlException("insert Account [username=" + (account != null ? account.getUsername() : "null") + "]", e);
             return false;
         } finally {
             em.close();
@@ -88,10 +104,23 @@ public class AccountDAOImpl implements AccountDAO {
             if (trans.isActive()) {
                 trans.rollback();
             }
-            e.printStackTrace();
+            logSqlException("update Account [id=" + (account != null ? account.getId() : "null") + "]", e);
             return false;
         } finally {
             em.close();
         }
+    }
+
+    private void logSqlException(String action, Throwable t) {
+        StringBuilder sb = new StringBuilder("Lỗi JPA/Database khi thực hiện ").append(action).append(": ");
+        Throwable curr = t;
+        while (curr != null) {
+            if (curr instanceof SQLException sqlEx) {
+                sb.append(String.format(" [SQLState=%s, ErrorCode=%d, Message=%s]",
+                    sqlEx.getSQLState(), sqlEx.getErrorCode(), sqlEx.getMessage()));
+            }
+            curr = curr.getCause();
+        }
+        LOGGER.log(Level.SEVERE, sb.toString(), t);
     }
 }

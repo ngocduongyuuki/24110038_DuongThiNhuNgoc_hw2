@@ -26,7 +26,7 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session != null && session.getAttribute("account") != null) {
-            response.sendRedirect(request.getContextPath() + "/product/list");
+            response.sendRedirect(request.getContextPath() + "/home");
             return;
         }
         request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
@@ -69,7 +69,7 @@ public class LoginServlet extends HttpServlet {
             response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
             response.setHeader("Pragma", "no-cache");
             response.setDateHeader("Expires", 0);
-            response.sendRedirect(request.getContextPath() + "/product/list");
+            response.sendRedirect(request.getContextPath() + "/home");
         } else {
             request.setAttribute("error", "Tên đăng nhập hoặc mật khẩu không đúng.");
             request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
