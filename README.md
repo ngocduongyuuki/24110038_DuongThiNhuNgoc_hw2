@@ -112,7 +112,15 @@ mvn clean package
 8. Start Tomcat and access the application through your browser.
 
 ---
+## Storage
 
+Uploaded videos are stored as physical files on the server's local file system, while video metadata is stored in Microsoft SQL Server.
+
+- **Storage location:** Configured through the `UPLOAD_DIR` JVM parameter.
+- **Database:** Stores video information such as title, description, file paths, upload date, and owner.
+- **Video files:** Are not included in this GitHub repository.
+
+When running the project on another machine, configure `UPLOAD_DIR` to point to a valid directory for video storage.
 ## Author
 
 **Duong Thi Nhu Ngoc**
