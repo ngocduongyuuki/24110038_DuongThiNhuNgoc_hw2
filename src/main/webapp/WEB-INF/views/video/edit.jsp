@@ -3,132 +3,94 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chỉnh sửa video</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
-    <style>
-        .upload-hint { font-size: 11px; color: var(--color-text-muted); margin-top: 4px; }
-        .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 13px; color: var(--color-text); }
-        .form-group input[type=text], .form-group textarea {
-            width: 100%; padding: 8px 10px; border: 1px solid var(--color-decor);
-            border-radius: 4px; font-size: 13px; box-sizing: border-box;
-            background-color: #ffffff; color: var(--color-text);
-            transition: border-color 0.15s, box-shadow 0.15s;
-        }
-        .form-group input[type=text]:focus, .form-group textarea:focus {
-            border-color: var(--color-primary);
-            box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.2);
-            outline: none;
-        }
-        .form-group textarea { height: 90px; resize: vertical; }
-        .form-group input[type=file] { font-size: 13px; }
-        .current-video { margin: 10px 0; }
-        .current-video video { max-width: 400px; border-radius: 4px; border: 1px solid var(--color-border); }
-        .btn-submit {
-            background: var(--color-primary); color: #ffffff; border: 1px solid var(--color-primary-dark);
-            padding: 9px 22px; border-radius: 4px; font-size: 13px; font-weight: 500;
-            cursor: pointer; transition: background 0.15s;
-        }
-        .btn-submit:hover { background: var(--color-primary-dark); }
-        .btn-submit:focus { outline: none; box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.35); }
-        .btn-submit:active { background: var(--color-header); transform: translateY(1px); }
-        .btn-cancel {
-            background: #ffffff; color: var(--color-sidebar); padding: 9px 16px; border-radius: 4px;
-            font-size: 13px; text-decoration: none; display: inline-block; margin-left: 8px;
-            border: 1px solid var(--color-decor); font-weight: 500;
-            transition: all 0.15s;
-        }
-        .btn-cancel:hover { background: #EAF2F6; text-decoration: none; color: var(--color-sidebar); }
-        .btn-cancel:focus { outline: none; box-shadow: 0 0 0 3px rgba(102, 155, 188, 0.35); }
-        .btn-cancel:active { background: #D8E6EE; transform: translateY(1px); }
-    </style>
+    <title>Chỉnh sửa video - ProductManager</title>
 </head>
 <body>
-    <header class="top-header">
-        <a href="${pageContext.request.contextPath}/home" class="brand-title">ProductManager</a>
-        <div class="user-actions">
-            <span class="user-name">Xin chào <strong>${sessionScope.account.fullName}</strong></span>
-            <a href="${pageContext.request.contextPath}/logout" class="btn-logout">Đăng xuất</a>
+    <div class="d-flex align-items-center mb-3">
+        <a href="${pageContext.request.contextPath}/video" class="btn btn-sm btn-outline-secondary me-2">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        <div>
+            <h1 class="h4 mb-0"><i class="bi bi-pencil-square me-2 text-danger"></i>Chỉnh sửa video</h1>
         </div>
-    </header>
+    </div>
 
-    <div class="app-layout">
-        <aside class="sidebar">
-            <div class="sidebar-profile">
-                <img class="sidebar-avatar" src="${pageContext.request.contextPath}/assets/images/avatar.svg" alt="Avatar">
-                <div class="sidebar-role">Thành viên</div>
-            </div>
-            <ul class="sidebar-menu">
-                <li><a href="${pageContext.request.contextPath}/home" class="menu-link">Trang chủ</a></li>
-                <li>
-                    <a href="${pageContext.request.contextPath}/video" class="menu-link active-black">Quản lý Video</a>
-                    <ul class="tree-subnav">
-                        <li><a href="${pageContext.request.contextPath}/video/add">Thêm video mới</a></li>
-                        <li><a href="${pageContext.request.contextPath}/video" class="sub-active">Danh sách video của tôi</a></li>
-                    </ul>
-                </li>
-                <li><a href="${pageContext.request.contextPath}/product/list" class="menu-link">Quản lý sản phẩm</a></li>
-            </ul>
-        </aside>
-
-        <main class="content-area">
-            <h1 class="page-header-title">Chỉnh sửa video</h1>
-            <p class="page-header-subtitle">Cập nhật tiêu đề, mô tả hoặc thay thế file video</p>
-
+    <div class="card shadow-sm" style="max-width:700px;">
+        <div class="card-header bg-white">
+            <strong><i class="bi bi-camera-video me-2"></i>Thông tin video</strong>
+        </div>
+        <div class="card-body">
             <c:if test="${not empty error}">
-                <div class="alert alert-danger">${error}</div>
+                <div class="alert alert-danger" role="alert">
+                    <i class="bi bi-exclamation-triangle me-2"></i><c:out value="${error}"/>
+                </div>
             </c:if>
 
-            <div class="panel-box">
-                <div class="panel-box-header">Thông tin video</div>
-                <div class="panel-box-body">
-                    <form action="${pageContext.request.contextPath}/video/edit"
-                          method="post"
-                          enctype="multipart/form-data">
+            <form action="${pageContext.request.contextPath}/video/edit" method="post"
+                  enctype="multipart/form-data" novalidate id="editVideoForm">
+                <input type="hidden" name="videoId" value="${video.id}">
 
-                        <input type="hidden" name="videoId" value="${video.id}">
-
-                        <div class="form-group">
-                            <label for="title">Tiêu đề <span style="color:var(--color-primary);">*</span></label>
-                            <input type="text" id="title" name="title"
-                                   value="<c:out value='${video.title}'/>"
-                                   maxlength="200" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="description">Mô tả</label>
-                            <textarea id="description" name="description"><c:out value="${video.description}"/></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Video hiện tại</label>
-                            <div class="current-video">
-                                <video controls>
-                                    <source src="${pageContext.request.contextPath}${video.videoPath}" type="video/mp4">
-                                    Trình duyệt không hỗ trợ phát video.
-                                </video>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="videoFile">Thay file video (để trống nếu không muốn thay)</label>
-                            <input type="file" id="videoFile" name="videoFile"
-                                   accept="video/mp4,video/webm,video/ogg,.mp4,.webm,.ogv,.mov">
-                            <div class="upload-hint">
-                                Chấp nhận: MP4, WebM, OGV, MOV. Tối đa 200MB. Bỏ trống để giữ file cũ.
-                            </div>
-                        </div>
-
-                        <div>
-                            <button type="submit" class="btn-submit">Lưu thay đổi</button>
-                            <a href="${pageContext.request.contextPath}/video" class="btn-cancel">Hủy</a>
-                        </div>
-                    </form>
+                <div class="mb-3">
+                    <label for="title" class="form-label fw-semibold">
+                        Tiêu đề <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" class="form-control" id="editTitle" name="title"
+                           value="<c:out value='${video.title}'/>"
+                           maxlength="200" required>
+                    <div class="invalid-feedback">Tiêu đề video không được để trống.</div>
                 </div>
-            </div>
-        </main>
+
+                <div class="mb-3">
+                    <label for="editDesc" class="form-label fw-semibold">Mô tả</label>
+                    <textarea class="form-control" id="editDesc" name="description" rows="3"><c:out value="${video.description}"/></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Video hiện tại</label>
+                    <div>
+                        <video controls style="max-width:100%;border-radius:4px;border:1px solid #dee2e6;max-height:220px;">
+                            <source src="${pageContext.request.contextPath}${video.videoPath}" type="video/mp4">
+                            Trình duyệt không hỗ trợ phát video.
+                        </video>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="videoFile" class="form-label fw-semibold">Thay file video</label>
+                    <input type="file" class="form-control" id="editVideoFile" name="videoFile"
+                           accept="video/mp4,video/webm,video/ogg,.mp4,.webm,.ogv,.mov">
+                    <div class="form-text text-muted" style="font-size:11px;">
+                        <i class="bi bi-info-circle me-1"></i>Chấp nhận: MP4, WebM, OGV, MOV. Tối đa 200MB. Bỏ trống để giữ file cũ.
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-check-circle me-1"></i>Lưu thay đổi
+                    </button>
+                    <a href="${pageContext.request.contextPath}/video" class="btn btn-outline-dark">
+                        <i class="bi bi-x-lg me-1"></i>Hủy
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
+
+<script>
+(function() {
+    'use strict';
+    var form = document.getElementById('editVideoForm');
+    if (!form) return;
+    form.addEventListener('submit', function(e) {
+        var title = document.getElementById('editTitle').value.trim();
+        document.getElementById('editTitle').classList.remove('is-invalid');
+        if (!title || title.length > 200) {
+            document.getElementById('editTitle').classList.add('is-invalid');
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    });
+})();
+</script>
 </body>
 </html>

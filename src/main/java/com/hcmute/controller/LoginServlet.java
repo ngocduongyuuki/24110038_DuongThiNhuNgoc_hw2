@@ -40,18 +40,31 @@ public class LoginServlet extends HttpServlet {
         String usernameOrEmail = request.getParameter("username");
         String password = request.getParameter("password");
 
-        // Kiểm tra tài khoản chưa kích hoạt để đưa ra thông báo phù hợp
-        if (usernameOrEmail != null && !usernameOrEmail.isBlank()) {
-            Account found = accountDAO.findByUsernameOrEmail(usernameOrEmail.trim());
-            if (found != null && !found.isActive()) {
-                request.setAttribute("error", "Tài khoản chưa được kích hoạt. Vui lòng kiểm tra email để xác thực OTP.");
-                request.setAttribute("pendingEmail", found.getEmail());
-                request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
-                return;
-            }
+        if (usernameOrEmail == null || usernameOrEmail.trim().isEmpty()) {
+            request.setAttribute("error", "Tên đăng nhập hoặc email không được để trống.");
+            request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
+            return;
         }
 
-        Account account = accountService.login(usernameOrEmail, password);
+        if (password == null || password.trim().isEmpty()) {
+            request.setAttribute("username", usernameOrEmail.trim());
+            request.setAttribute("error", "Mật khẩu không được để trống.");
+            request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
+            return;
+        }
+
+        request.setAttribute("username", usernameOrEmail.trim());
+
+        // Kiểm tra tài khoản chưa kích hoạt để đưa ra thông báo phù hợp
+        Account found = accountDAO.findByUsernameOrEmail(usernameOrEmail.trim());
+        if (found != null && !found.isActive()) {
+            request.setAttribute("error", "Tài khoản chưa được kích hoạt. Vui lòng kiểm tra email để xác thực OTP.");
+            request.setAttribute("pendingEmail", found.getEmail());
+            request.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(request, response);
+            return;
+        }
+
+        Account account = accountService.login(usernameOrEmail.trim(), password);
 
         if (account != null) {
             HttpSession session = request.getSession();
@@ -65,6 +78,7 @@ public class LoginServlet extends HttpServlet {
                 null,
                 account.isActive()
             );
+            safeAccount.setProfileImage(account.getProfileImage());
             session.setAttribute("account", safeAccount);
             response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
             response.setHeader("Pragma", "no-cache");

@@ -45,6 +45,8 @@ public class ResetPasswordServlet extends HttpServlet {
             return;
         }
 
+        request.setAttribute("email", email);
+
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
 

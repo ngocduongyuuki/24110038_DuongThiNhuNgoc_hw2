@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemesh>
+    <!-- Auth layout -->
+    <mapping path="/login" decorator="/WEB-INF/decorators/auth.jsp"/>
+    <mapping path="/register" decorator="/WEB-INF/decorators/auth.jsp"/>
+    <mapping path="/forgot-password" decorator="/WEB-INF/decorators/auth.jsp"/>
+    <mapping path="/verify-otp" decorator="/WEB-INF/decorators/auth.jsp"/>
+    <mapping path="/reset-password" decorator="/WEB-INF/decorators/auth.jsp"/>
+
+    <!-- Main layout -->
+    <mapping path="/home" decorator="/WEB-INF/decorators/main.jsp"/>
+    <mapping path="/product/*" decorator="/WEB-INF/decorators/main.jsp"/>
+    <mapping path="/video/*" decorator="/WEB-INF/decorators/main.jsp"/>
+    <mapping path="/profile" decorator="/WEB-INF/decorators/main.jsp"/>
+    <mapping path="/profile/*" decorator="/WEB-INF/decorators/main.jsp"/>
+
+    <!-- Exclude -->
+    <mapping path="/assets/*" exclude="true"/>
+    <mapping path="/index.jsp" exclude="true"/>
+    <mapping path="/logout" exclude="true"/>
+    <mapping path="/upload/*" exclude="true"/>
+</sitemesh>

@@ -1,5 +1,6 @@
 package com.hcmute.controller;
 
+import com.hcmute.model.Account;
 import com.hcmute.service.AccountService;
 import com.hcmute.service.OtpService;
 import com.hcmute.service.OtpVerifyResult;
@@ -96,10 +97,43 @@ public class VerifyOtpServlet extends HttpServlet {
         if ("REGISTER".equalsIgnoreCase(purpose)) {
             accountService.activateAccount(email);
             response.sendRedirect(request.getContextPath() + "/login?activated=1");
+
         } else if ("FORGOT_PASSWORD".equalsIgnoreCase(purpose)) {
             HttpSession session = request.getSession();
             session.setAttribute("verified_reset_email", email);
             response.sendRedirect(request.getContextPath() + "/reset-password");
+
+        } else if ("UPDATE_EMAIL".equalsIgnoreCase(purpose)) {
+            HttpSession session = request.getSession();
+            Account sessionAccount = (Account) session.getAttribute("account");
+            String newEmail = (String) session.getAttribute("pending_email_change");
+
+            if (sessionAccount == null || newEmail == null) {
+                response.sendRedirect(request.getContextPath() + "/profile?error=session_expired");
+                return;
+            }
+
+            // Kiểm tra email OTP gửi đến phải khớp với email mới đang chờ xác nhận
+            if (!email.equalsIgnoreCase(newEmail)) {
+                request.setAttribute("error", "OTP không hợp lệ cho email này.");
+                request.setAttribute("cooldown", otpService.getRemainingCooldownSeconds(email, purpose));
+                request.getRequestDispatcher("/WEB-INF/views/auth/verify-otp.jsp").forward(request, response);
+                return;
+            }
+
+            boolean updated = accountService.updateEmail(sessionAccount.getId(), newEmail);
+            if (updated) {
+                // Cập nhật session với email mới
+                sessionAccount.setEmail(newEmail);
+                session.setAttribute("account", sessionAccount);
+                session.removeAttribute("pending_email_change");
+                response.sendRedirect(request.getContextPath() + "/profile?emailUpdated=1");
+            } else {
+                request.setAttribute("error", "Cập nhật email thất bại, vui lòng thử lại.");
+                request.setAttribute("cooldown", otpService.getRemainingCooldownSeconds(email, purpose));
+                request.getRequestDispatcher("/WEB-INF/views/auth/verify-otp.jsp").forward(request, response);
+            }
+
         } else {
             response.sendRedirect(request.getContextPath() + "/login");
         }

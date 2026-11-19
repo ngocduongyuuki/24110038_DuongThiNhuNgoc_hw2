@@ -3,52 +3,71 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quên mật khẩu - ProductManager</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
 </head>
 <body>
+<div class="auth-card">
+    <div class="auth-card-header">
+        <h2><i class="bi bi-shield-lock me-2"></i>Quên mật khẩu</h2>
+        <p>Nhập email để nhận mã xác nhận OTP</p>
+    </div>
+    <div class="auth-card-body">
 
-<div class="auth-wrapper">
-    <div class="auth-box">
-        <div class="auth-header">
-            <h2>Quên mật khẩu</h2>
-            <p>Hệ thống Quản lý Sản phẩm</p>
-        </div>
-
-        <div class="auth-body">
-            <c:if test="${not empty error}">
-                <div class="alert alert-danger">${error}</div>
-            </c:if>
-
-            <p style="font-size: 13px; color: var(--color-text-muted); margin-bottom: 15px;">
-                Vui lòng nhập địa chỉ email đã đăng ký. Hệ thống sẽ gửi một mã OTP gồm 6 chữ số để bạn đặt lại mật khẩu.
-            </p>
-
-            <form method="post" action="${pageContext.request.contextPath}/forgot-password">
-                <div class="form-group">
-                    <label>Địa chỉ Email:</label>
-                    <input type="email"
-                           class="form-control"
-                           name="email"
-                           placeholder="name@example.com"
-                           value="${email}"
-                           required
-                           autofocus>
-                </div>
-
-                <div style="margin-top: 20px;">
-                    <button type="submit" class="btn btn-primary btn-block">Gửi mã xác nhận</button>
-                </div>
-            </form>
-
-            <div class="auth-footer" style="margin-top: 20px;">
-                <a href="${pageContext.request.contextPath}/login">← Quay lại Đăng nhập</a>
+        <c:if test="${not empty error}">
+            <div class="alert alert-danger" role="alert">
+                <i class="bi bi-exclamation-triangle me-2"></i><c:out value="${error}"/>
             </div>
+        </c:if>
+
+        <p class="text-muted mb-3" style="font-size:13px;">
+            <i class="bi bi-info-circle me-1"></i>
+            Vui lòng nhập địa chỉ email đã đăng ký. Hệ thống sẽ gửi mã OTP gồm 6 chữ số để đặt lại mật khẩu.
+        </p>
+
+        <form method="post" action="${pageContext.request.contextPath}/forgot-password" novalidate id="forgotForm">
+            <div class="mb-3">
+                <label for="email" class="form-label fw-semibold">Địa chỉ Email <span class="text-danger">*</span></label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                    <input type="email" class="form-control" id="forgotEmail" name="email"
+                           placeholder="name@example.com"
+                           value="<c:out value='${email}'/>"
+                           required autofocus>
+                    <div class="invalid-feedback">Vui lòng nhập địa chỉ email hợp lệ.</div>
+                </div>
+            </div>
+
+            <div class="d-grid mt-4">
+                <button type="submit" class="btn btn-danger btn-lg">
+                    <i class="bi bi-send me-2"></i>Gửi mã xác nhận
+                </button>
+            </div>
+        </form>
+
+        <div class="auth-footer-link mt-3">
+            <a href="${pageContext.request.contextPath}/login" class="text-danger">
+                <i class="bi bi-arrow-left me-1"></i>Quay lại Đăng nhập
+            </a>
         </div>
     </div>
 </div>
 
+<script>
+(function() {
+    'use strict';
+    var emailPattern = /^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,6}$/;
+    var form = document.getElementById('forgotForm');
+    if (!form) return;
+    form.addEventListener('submit', function(e) {
+        var email = document.getElementById('forgotEmail').value.trim();
+        document.getElementById('forgotEmail').classList.remove('is-invalid');
+        if (!email || !emailPattern.test(email)) {
+            document.getElementById('forgotEmail').classList.add('is-invalid');
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    });
+})();
+</script>
 </body>
 </html>

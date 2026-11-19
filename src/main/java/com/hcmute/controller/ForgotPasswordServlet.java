@@ -21,6 +21,8 @@ public class ForgotPasswordServlet extends HttpServlet {
 
     private final AccountService accountService = new AccountServiceImpl();
     private final OtpService otpService = new OtpServiceImpl();
+    private static final java.util.regex.Pattern EMAIL_PATTERN =
+            java.util.regex.Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$");
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -41,6 +43,12 @@ public class ForgotPasswordServlet extends HttpServlet {
         }
 
         email = email.trim();
+        if (!EMAIL_PATTERN.matcher(email).matches()) {
+            request.setAttribute("error", "Địa chỉ email không đúng định dạng.");
+            request.setAttribute("email", email);
+            request.getRequestDispatcher("/WEB-INF/views/auth/forgot-password.jsp").forward(request, response);
+            return;
+        }
         Account account = accountService.findByEmail(email);
 
         if (account != null && account.isActive()) {
