@@ -81,20 +81,18 @@ public class JpaConfig {
         String catalinaHome = System.getProperty("catalina.home", "");
         String userDir = System.getProperty("user.dir", "");
 
-        // Danh sách các vị trí có thể chứa file .env hoặc db.properties
+        // Danh sách các vị trí an toàn BÊN NGOÀI source code có thể chứa file .env
+        String customEnvPath = System.getProperty("env.file", System.getenv("ENV_FILE"));
         String[] searchPaths = {
-            ".env",
-            "db.properties",
-            userDir + File.separator + ".env",
-            userDir + File.separator + "db.properties",
-            catalinaBase + File.separator + ".env",
+            customEnvPath,
             catalinaBase + File.separator + "conf" + File.separator + ".env",
             catalinaBase + File.separator + "conf" + File.separator + "db.properties",
-            catalinaHome + File.separator + ".env",
+            catalinaBase + File.separator + ".env",
             catalinaHome + File.separator + "conf" + File.separator + ".env",
-            // Tìm trong thư mục cha của user.dir (khi chạy từ bin/)
-            new File(userDir).getParent() != null
-                ? new File(userDir).getParent() + File.separator + ".env" : "",
+            catalinaHome + File.separator + ".env",
+            "D:\\Lập trình web\\24110038_DuongThiNhuNgoc_hw2\\.env",
+            userDir + File.separator + ".env",
+            ".env"
         };
 
         for (String pathStr : searchPaths) {
@@ -102,22 +100,8 @@ public class JpaConfig {
             File file = new File(pathStr);
             if (file.exists() && file.isFile()) {
                 loadFileIntoMap(file, map);
+                break; // Dừng lại ngay khi tìm thấy file cấu hình hợp lệ đầu tiên
             }
-        }
-
-        // Kiểm tra thêm từ Classpath
-        try (InputStream is = JpaConfig.class.getClassLoader().getResourceAsStream(".env")) {
-            if (is != null) {
-                readLinesIntoMap(is, map);
-            }
-        } catch (Exception ignored) {
-        }
-
-        try (InputStream is = JpaConfig.class.getClassLoader().getResourceAsStream("db.properties")) {
-            if (is != null) {
-                readLinesIntoMap(is, map);
-            }
-        } catch (Exception ignored) {
         }
 
         return map;

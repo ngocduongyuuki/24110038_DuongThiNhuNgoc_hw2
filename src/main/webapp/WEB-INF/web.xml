@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee 
-         https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
          version="6.0">
 
     <display-name>ProductManager</display-name>
@@ -15,15 +14,11 @@
         <tracking-mode>COOKIE</tracking-mode>
     </session-config>
 
-    <!-- SiteMesh 3 Filter
-         Chỉ dùng dispatcher REQUEST.
-         SiteMesh 3 tự buffer toàn bộ response kể cả output từ forward() ở REQUEST level.
-         Thêm FORWARD gây double-decoration: response bị wrap 2 lần → body rỗng → trang trắng.
-    -->
     <filter>
         <filter-name>sitemesh</filter-name>
         <filter-class>org.sitemesh.config.ConfigurableSiteMeshFilter</filter-class>
     </filter>
+
     <filter-mapping>
         <filter-name>sitemesh</filter-name>
         <url-pattern>/*</url-pattern>

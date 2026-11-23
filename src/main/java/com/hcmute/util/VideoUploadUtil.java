@@ -37,7 +37,7 @@ public class VideoUploadUtil {
     /**
      * Returns the upload directory path.
      * Reads UPLOAD_DIR from environment / JVM property first.
-     * Falls back to: <catalina.base>/uploads/videos
+     * Checks known existing storage locations before falling back to default.
      */
     public static String getUploadDir() {
         String dir = System.getenv("UPLOAD_DIR");
@@ -48,11 +48,48 @@ public class VideoUploadUtil {
             String catalinaBase = System.getProperty("catalina.base", "");
             if (!catalinaBase.isBlank()) {
                 dir = catalinaBase + File.separator + "uploads" + File.separator + "videos";
+            } else if (Files.exists(Paths.get("D:\\apache-tomcat-11.0.27\\uploads\\videos"))) {
+                dir = "D:\\apache-tomcat-11.0.27\\uploads\\videos";
             } else {
                 dir = System.getProperty("java.io.tmpdir") + File.separator + "pm_uploads" + File.separator + "videos";
             }
         }
         return dir;
+    }
+
+    /**
+     * Resolves the actual physical file path for a given filename.
+     * Checks multiple possible upload directories to ensure backward compatibility
+     * when switching between Tomcat 11 and Tomcat 10.1 in VS Code.
+     */
+    public static Path resolveVideoPath(String fileName) {
+        if (fileName == null || fileName.isBlank() || fileName.contains("..")) {
+            return null;
+        }
+
+        String baseName = extractFileName(fileName);
+        String catalinaBase = System.getProperty("catalina.base", "");
+        String catalinaHome = System.getProperty("catalina.home", "");
+
+        String[] candidateDirs = {
+            getUploadDir(),
+            "D:\\apache-tomcat-11.0.27\\uploads\\videos",
+            catalinaBase.isBlank() ? null : catalinaBase + File.separator + "uploads" + File.separator + "videos",
+            catalinaHome.isBlank() ? null : catalinaHome + File.separator + "uploads" + File.separator + "videos",
+            "D:\\Lập trình web\\24110038_DuongThiNhuNgoc_hw2\\uploads\\videos"
+        };
+
+        for (String cDir : candidateDirs) {
+            if (cDir == null || cDir.isBlank()) continue;
+            try {
+                Path candidate = Paths.get(cDir).resolve(baseName);
+                if (Files.exists(candidate) && Files.isRegularFile(candidate)) {
+                    return candidate;
+                }
+            } catch (Exception ignored) {}
+        }
+
+        return null;
     }
 
     public static String getUploadUrlPrefix() {
