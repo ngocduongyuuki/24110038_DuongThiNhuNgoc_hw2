@@ -268,6 +268,14 @@ function cancelPreview() {
     document.getElementById('previewImg').src = '';
 }
 
+// ─── Loading state khi submit form ────────────────────────────────────────
+function showLoading(btn, text) {
+    if (!btn) return;
+    btn.disabled = true;
+    btn.dataset.originalHtml = btn.innerHTML;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>' + text;
+}
+
 // ─── Validation form thông tin cá nhân ────────────────────────────────────
 (function() {
     var form = document.getElementById('profileForm');
@@ -303,6 +311,9 @@ function cancelPreview() {
         if (!valid) {
             e.preventDefault();
             e.stopPropagation();
+        } else {
+            var submitBtn = form.querySelector('button[type="submit"]');
+            showLoading(submitBtn, 'Đang lưu...');
         }
     });
 })();
@@ -330,7 +341,20 @@ function cancelPreview() {
             errorDiv.textContent = 'Địa chỉ email không đúng định dạng.';
             errorDiv.style.display = 'block';
             e.preventDefault();
+        } else {
+            var submitBtn = form.querySelector('button[type="submit"]');
+            showLoading(submitBtn, 'Đang gửi mã OTP...');
         }
+    });
+})();
+
+// ─── Loading khi submit avatar ─────────────────────────────────────────────
+(function() {
+    var form = document.getElementById('avatarForm');
+    if (!form) return;
+    form.addEventListener('submit', function(e) {
+        var submitBtn = form.querySelector('button[type="submit"]');
+        showLoading(submitBtn, 'Đang tải lên...');
     });
 })();
 </script>

@@ -20,13 +20,26 @@
             transition: box-shadow .2s;
         }
         .video-card:hover { box-shadow: 0 4px 14px rgba(120,0,0,.12); }
+        a.video-card-thumb,
         .video-card-thumb {
             background: #002336;
             height: 160px;
             display: flex; align-items: center; justify-content: center;
             color: #669bbc; font-size: 36px; overflow: hidden;
+            position: relative;
+            text-decoration: none;
+            cursor: pointer;
         }
-        .video-card-thumb video { width:100%; height:100%; object-fit:cover; }
+        .video-card-thumb img,
+        .video-card-thumb video {
+            width:100%; height:100%; object-fit:cover; display:block;
+            transition: transform .25s ease, opacity .2s ease;
+        }
+        .video-card-thumb:hover img,
+        .video-card-thumb:hover video {
+            transform: scale(1.04);
+            opacity: 0.95;
+        }
         .video-card-body { padding: 12px 14px 14px; }
         .video-card-title {
             font-size: 14px; font-weight: bold; margin-bottom: 6px;
@@ -68,16 +81,25 @@
             <div class="video-grid">
                 <c:forEach var="v" items="${latestVideos}">
                     <div class="video-card">
-                        <div class="video-card-thumb">
+                        <a href="${pageContext.request.contextPath}/video/detail?id=${v.id}"
+                           class="video-card-thumb"
+                           title="<c:out value='${v.title}'/>">
                             <c:choose>
+                                <c:when test="${not empty v.thumbnailPath}">
+                                    <img src="${pageContext.request.contextPath}${v.thumbnailPath}" alt="<c:out value='${v.title}'/>"
+                                         onerror="this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='block';">
+                                    <video preload="metadata" muted playsinline style="display:none; pointer-events: none;">
+                                        <source src="${pageContext.request.contextPath}${v.videoPath}#t=0.001" type="video/mp4">
+                                    </video>
+                                </c:when>
                                 <c:when test="${not empty v.videoPath}">
-                                    <video preload="metadata" muted>
-                                        <source src="${pageContext.request.contextPath}${v.videoPath}" type="video/mp4">
+                                    <video preload="metadata" muted playsinline style="pointer-events: none;">
+                                        <source src="${pageContext.request.contextPath}${v.videoPath}#t=0.001" type="video/mp4">
                                     </video>
                                 </c:when>
                                 <c:otherwise>🎬</c:otherwise>
                             </c:choose>
-                        </div>
+                        </a>
                         <div class="video-card-body">
                             <div class="video-card-title">
                                 <a href="${pageContext.request.contextPath}/video/detail?id=${v.id}">

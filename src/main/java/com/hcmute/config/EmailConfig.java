@@ -112,16 +112,17 @@ public class EmailConfig {
         String catalinaHome = System.getProperty("catalina.home", "");
         String userDir = System.getProperty("user.dir", "");
 
+        String customEnvPath = System.getProperty("env.file", System.getenv("ENV_FILE"));
         String[] searchPaths = {
-            ".env",
-            "mail.properties",
-            "db.properties",
-            userDir + File.separator + ".env",
-            catalinaBase + File.separator + ".env",
+            customEnvPath,
             catalinaBase + File.separator + "conf" + File.separator + ".env",
+            catalinaBase + File.separator + "conf" + File.separator + "mail.properties",
+            catalinaBase + File.separator + ".env",
+            catalinaHome + File.separator + "conf" + File.separator + ".env",
             catalinaHome + File.separator + ".env",
-            new File(userDir).getParent() != null
-                ? new File(userDir).getParent() + File.separator + ".env" : ""
+            "D:\\Lập trình web\\24110038_DuongThiNhuNgoc_hw2\\.env",
+            userDir + File.separator + ".env",
+            ".env"
         };
 
         for (String pathStr : searchPaths) {
@@ -129,14 +130,9 @@ public class EmailConfig {
             File file = new File(pathStr);
             if (file.exists() && file.isFile()) {
                 loadFileIntoMap(file, map);
+                break;
             }
         }
-
-        try (InputStream is = EmailConfig.class.getClassLoader().getResourceAsStream(".env")) {
-            if (is != null) {
-                readLinesIntoMap(is, map);
-            }
-        } catch (Exception ignored) {}
 
         return map;
     }

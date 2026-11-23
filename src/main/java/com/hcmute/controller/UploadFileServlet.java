@@ -30,8 +30,8 @@ public class UploadFileServlet extends HttpServlet {
             return;
         }
 
-        Path filePath = Paths.get(VideoUploadUtil.getUploadDir()).resolve(fileName);
-        if (!Files.exists(filePath) || !Files.isRegularFile(filePath)) {
+        Path filePath = VideoUploadUtil.resolveVideoPath(fileName);
+        if (filePath == null || !Files.exists(filePath) || !Files.isRegularFile(filePath)) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "File không tìm thấy.");
             return;
         }

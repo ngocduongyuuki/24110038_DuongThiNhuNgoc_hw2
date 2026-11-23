@@ -302,9 +302,7 @@ public class VideoServlet extends HttpServlet {
 
         // Check if the file still exists on disk
         String fileName = VideoUploadUtil.extractFileName(video.getVideoPath());
-        String uploadDir = VideoUploadUtil.getUploadDir();
-        boolean fileExists = (fileName != null) &&
-            Files.exists(Paths.get(uploadDir).resolve(fileName));
+        boolean fileExists = (fileName != null) && (VideoUploadUtil.resolveVideoPath(fileName) != null);
 
         request.setAttribute("video", video);
         request.setAttribute("fileExists", fileExists);
