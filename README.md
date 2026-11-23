@@ -27,9 +27,7 @@ The application is developed and deployed using **Visual Studio Code with Apache
 
 ### Video Management
 
-<img width="1915" height="1088" alt="Screenshot 2026-11-23 113657" src="https://github.com/user-attachments/assets/88e67282-2d0e-411c-995a-d99d3cf4b6f2" />
-
-
+![Uploading Screenshot 2026-11-23 113728.png…]()
 ### Video Details
 
 <img width="1915" height="1088" alt="Screenshot 2026-11-23 113657" src="https://github.com/user-attachments/assets/c0c178f5-22fb-4ad6-8e70-bfbfd4466929" />
